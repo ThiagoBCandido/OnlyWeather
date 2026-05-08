@@ -1,27 +1,53 @@
-# OnlyweatherFrontend
+# OnlyWeather
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+**OnlyWeather** é uma aplicação web de clima em tempo real desenvolvida com **Angular** e **Tailwind CSS**.  
+O projeto permite consultar dados meteorológicos reais de cidades, visualizar temperatura atual, sensação térmica, umidade, vento, previsão dos próximos dias e favoritar cidades localmente no navegador.
 
-## Development server
+## Preview
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+> Em breve: adicionar prints ou GIF da aplicação aqui.
 
-## Code scaffolding
+## Funcionalidades
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Busca de clima por cidade
+- Dados meteorológicos reais
+- Temperatura atual
+- Sensação térmica
+- Umidade
+- Velocidade do vento
+- Previsão dos próximos dias
+- Ícones SVG dinâmicos conforme o clima
+- Tema claro/escuro
+- Cores dinâmicas de acordo com o clima
+- Sistema de cidades favoritas
+- Favoritos salvos no `localStorage`
+- Interface responsiva com foco em mobile
+- UI inspirada em aplicativos modernos de clima
 
-## Build
+## Tecnologias utilizadas
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- Angular
+- TypeScript
+- Tailwind CSS
+- HTML
+- CSS
+- Open-Meteo API
+- LocalStorage
+- Git e GitHub
 
-## Running unit tests
+## API utilizada
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+O projeto utiliza a **Open-Meteo API** para buscar dados reais de clima e previsão meteorológica.
 
-## Running end-to-end tests
+Fluxo atual da aplicação:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```txt
+Usuário pesquisa uma cidade
+        ↓
+Angular consulta a API de geocoding
+        ↓
+Angular obtém latitude e longitude
+        ↓
+Angular consulta a API de previsão do tempo
+        ↓
+A interface exibe os dados reais
