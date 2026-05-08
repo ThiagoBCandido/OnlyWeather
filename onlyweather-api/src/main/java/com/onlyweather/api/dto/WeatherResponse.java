@@ -13,7 +13,7 @@ public record WeatherResponse(
     String condition,
     String weatherType,
     String icon,
-    String updateAt,
+    String updatedAt,
     List<ForecastDayResponse> forecast
 ) {
 }
