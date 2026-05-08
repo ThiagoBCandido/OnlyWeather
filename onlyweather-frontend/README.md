@@ -597,5 +597,3 @@ O objetivo do **OnlyWeather** é praticar o desenvolvimento de uma aplicação m
 ## Autor
 
 Desenvolvido por **Thiago Barbosa Candido**.
-
-GitHub: [ThiagoBCandido](https://github.com/ThiagoBCandido)
