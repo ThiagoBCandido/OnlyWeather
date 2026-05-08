@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
 export type WeatherType =
   | 'sunny'
   | 'partly-cloudy'
@@ -39,17 +41,15 @@ export interface WeatherData {
   providedIn: 'root'
 })
 export class WeatherService {
-  private readonly apiUrl = 'http://localhost:8080/api/weather';
-
+  private readonly apiUrl = `${environment.apiUrl}/weather`;
   constructor(private http: HttpClient) {}
-
   getWeatherByCity(city: string): Observable<WeatherData> {
     const params = new HttpParams().set('city', city);
 
-    return this.http.get<WeatherData>(this.apiUrl, { params }).pipe(
-      catchError((error) => {
+    return this.http.get<WeatherData>(this.apiUrl, { params }).pipe(catchError((error) => {
         const message = error?.error?.message || 'Não foi possível buscar o clima agora.';
         return throwError(() => new Error(message));
-      }));
+      })
+    );
   }
 }
