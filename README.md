@@ -5,7 +5,72 @@ O projeto permite consultar dados meteorológicos reais de cidades, visualizar t
 
 ## Preview
 
-> Em breve: adicionar prints ou GIF da aplicação aqui.
+> Em breve!
+
+## Estrutura do projeto
+
+```txt
+OnlyWeather/
+│
+├── .gitignore
+│
+└── onlyweather-frontend/
+    │
+    ├── .editorconfig
+    ├── .gitignore
+    ├── .postcssrc.json
+    ├── angular.json
+    ├── package.json
+    ├── package-lock.json
+    ├── README.md
+    ├── tailwind.config.js
+    ├── tsconfig.app.json
+    ├── tsconfig.json
+    ├── tsconfig.spec.json
+    │
+    └── src/
+        │
+        ├── index.html
+        ├── main.ts
+        ├── styles.css
+        ├── favicon.ico
+        │
+        ├── app/
+        │   │
+        │   ├── app.component.css
+        │   ├── app.component.html
+        │   ├── app.component.spec.ts
+        │   ├── app.component.ts
+        │   ├── app.config.ts
+        │   ├── app.routes.ts
+        │   │
+        │   ├── core/
+        │   │   └── services/
+        │   │       ├── weather.service.ts
+        │   │       └── weather.service.spec.ts
+        │   │
+        │   └── pages/
+        │       └── home/
+        │           ├── home.component.css
+        │           ├── home.component.html
+        │           ├── home.component.spec.ts
+        │           └── home.component.ts
+        │
+        └── assets/
+            │
+            ├── icons/
+            │   ├── moon.svg
+            │   ├── search.svg
+            │   ├── star.svg
+            │   ├── star-filled.svg
+            │   └── sun.svg
+            │
+            └── weather-icons/
+                ├── sunny.svg
+                ├── partly-cloudy.svg
+                ├── cloudy.svg
+                ├── rainy.svg
+                └── heavy-rain.svg
 
 ## Funcionalidades
 
