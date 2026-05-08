@@ -5,7 +5,7 @@ O projeto permite consultar dados meteorológicos reais de cidades, visualizar t
 
 ## Preview
 
-> Em breve!
+![Preview do OnlyWeather](docs/images/onlyweather-preview.png)
 
 ## Estrutura do projeto
 
