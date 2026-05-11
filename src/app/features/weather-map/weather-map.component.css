@@ -1,0 +1,153 @@
+.weather-map-card {
+  --text-primary: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.66);
+  --surface: rgba(255, 255, 255, 0.15);
+  --surface-light: rgba(255, 255, 255, 0.14);
+  --danger-bg: rgba(255, 70, 70, 0.16);
+  --danger-text: #ffd6d6;
+
+  width: 100%;
+  padding: 16px;
+  border-radius: 24px;
+  color: var(--text-primary);
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+.weather-map-header,
+.weather-map-legend {
+  display: flex;
+  align-items: center;
+}
+
+.weather-map-header {
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.weather-map-header span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.weather-map-header h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.weather-map-header strong {
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.88);
+  background: var(--surface-light);
+}
+
+.weather-map-header strong.error {
+  color: var(--danger-text);
+  background: var(--danger-bg);
+}
+
+.weather-map {
+  width: 100%;
+  height: 280px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #2f3842;
+}
+
+.weather-map-legend {
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.weather-map-legend div {
+  flex: 1;
+  height: 7px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1e90ff, #8b3dff, #ffcf33);
+}
+
+:host ::ng-deep .location-marker {
+  background: transparent;
+  border: none;
+}
+
+:host ::ng-deep .location-marker-content,
+:host ::ng-deep .location-marker-pulse {
+  border-radius: 50%;
+}
+
+:host ::ng-deep .location-marker-content {
+  position: relative;
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  background: rgba(28, 38, 50, 0.96);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.38);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+:host ::ng-deep .location-marker-content:hover {
+  transform: scale(1.08);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.48);
+}
+
+:host ::ng-deep .location-marker-content svg {
+  width: 24px;
+  height: 24px;
+  fill: #ffffff;
+  transform: rotate(45deg);
+}
+
+:host ::ng-deep .location-marker-pulse {
+  position: absolute;
+  inset: 4px;
+  z-index: 1;
+  background: rgba(127, 183, 255, 0.32);
+  animation: locationPulse 1.8s ease-out infinite;
+}
+
+@keyframes locationPulse {
+  from {
+    transform: scale(0.9);
+    opacity: 0.85;
+  }
+
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .weather-map-card {
+    padding: 14px;
+    border-radius: 22px;
+  }
+
+  .weather-map-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .weather-map {
+    height: 260px;
+  }
+}

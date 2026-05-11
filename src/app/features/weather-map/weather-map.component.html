@@ -1,0 +1,20 @@
+<section class="weather-map-card">
+  <header class="weather-map-header">
+    <div>
+      <span>Precipitation</span>
+      <h2>Weather map</h2>
+    </div>
+
+    <strong [class.error]="radarUnavailable">
+      {{ radarStatus }}
+    </strong>
+  </header>
+
+  <div #mapContainer class="weather-map"></div>
+
+  <footer class="weather-map-legend">
+    <span>Light</span>
+    <div></div>
+    <span>Heavy</span>
+  </footer>
+</section>

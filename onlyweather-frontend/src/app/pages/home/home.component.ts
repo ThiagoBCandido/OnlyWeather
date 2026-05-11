@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import {
-  ForecastDay,
-  WeatherData,
-  WeatherService,
-  WeatherType
-} from '../../core/services/weather.service';
+  WeatherMapComponent,
+  WeatherMapLocation
+} from '../../features/weather-map/weather-map.component';
+import { ForecastDay, WeatherData, WeatherService, WeatherType } from '../../core/services/weather.service';
 
 interface WeatherTheme {
   label: string;
@@ -20,10 +18,22 @@ interface WeatherTheme {
   darkCard: string;
 }
 
+type WeatherResponseWithCoordinates = WeatherData &
+  Partial<{
+    latitude: number;
+    longitude: number;
+    lat: number;
+    lon: number;
+    coord: {
+      lat?: number;
+      lon?: number;
+    };
+  }>;
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, WeatherMapComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -33,6 +43,7 @@ export class HomeComponent implements OnInit {
   searchTerm = 'Ribeirão Preto';
 
   weatherData: WeatherData | null = null;
+  selectedLocation: WeatherMapLocation | null = null;
   forecast: ForecastDay[] = [];
 
   isLoading = false;
@@ -197,10 +208,12 @@ export class HomeComponent implements OnInit {
         this.weatherData = weather;
         this.forecast = weather.forecast;
         this.selectedWeather = weather.weatherType;
+        this.selectedLocation = this.getWeatherLocation(weather);
         this.isLoading = false;
       },
       error: (error) => {
         this.errorMessage = error.message;
+        this.selectedLocation = null;
         this.isLoading = false;
       }
     });
@@ -235,6 +248,36 @@ export class HomeComponent implements OnInit {
     localStorage.setItem(
       'onlyweather-theme',
       this.isDarkMode ? 'dark' : 'light'
+    );
+  }
+
+  private getWeatherLocation(weather: WeatherData): WeatherMapLocation | null {
+    const data = weather as WeatherResponseWithCoordinates;
+
+    const lat = data.latitude ?? data.lat ?? data.coord?.lat;
+    const lon = data.longitude ?? data.lon ?? data.coord?.lon;
+
+    if (!this.isValidCoordinates(lat, lon)) {
+      return null;
+    }
+
+    return {
+      lat: lat as number,
+      lon: lon as number,
+      label: `${weather.cityName}, ${weather.countryCode}`
+    };
+  }
+
+  private isValidCoordinates(lat: unknown, lon: unknown): lat is number {
+    return (
+      typeof lat === 'number' &&
+      typeof lon === 'number' &&
+      Number.isFinite(lat) &&
+      Number.isFinite(lon) &&
+      lat >= -90 &&
+      lat <= 90 &&
+      lon >= -180 &&
+      lon <= 180
     );
   }
 
