@@ -19,7 +19,7 @@ public class WeatherController {
     }
 
     @GetMapping("/api/weather")
-    public WeatherResponse getWeatherByCity(
-            @RequestParam @NotBlank String city
-    ) {return weatherService.getWeatherByCity(city);}
+    public WeatherResponse getWeatherByCity(@RequestParam @NotBlank String city) {
+        return weatherService.getWeatherByCity(city);
+    }
 }
