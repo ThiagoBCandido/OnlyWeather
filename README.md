@@ -67,32 +67,58 @@ O mapa usa Leaflet no front-end e consome tiles de mapa/radar separadamente.
 
 ```txt
 OnlyWeather/
-  README.md
-  docs/
-  onlyweather-api/
-    pom.xml
-    mvnw
-    mvnw.cmd
-    src/main/java/com/onlyweather/api/
-      client/
-      config/
-      controller/
-      dto/
-      exception/
-      service/
-  onlyweather-frontend/
-    package.json
-    angular.json
-    tailwind.config.js
-    src/
-      app/
-        core/services/weather.service.ts
-        features/weather-map/
-        features/sun-cycle/
-        pages/home/
-      assets/
-        icons/
-        weather-icons/
+│
+├── README.md
+├── docs/
+│   └── images/
+│
+├── onlyweather-frontend/
+│   ├── angular.json
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── src/
+│       ├── environments/
+│       │   ├── environment.ts
+│       │   └── environment.prod.ts
+│       │
+│       ├── app/
+│       │   ├── core/
+│       │   │   └── services/
+│       │   │       └── weather.service.ts
+│       │   │
+│       │   ├── features/
+│       │   │   ├── weather-map/
+│       │   │   └── sun-cycle/
+│       │   │
+│       │   └── pages/
+│       │       └── home/
+│       │           ├── home.component.html
+│       │           ├── home.component.ts
+│       │           └── home.component.css
+│       │
+│       └── assets/
+│           ├── icons/
+│           └── weather-icons/
+│
+└── onlyweather-api/
+    ├── pom.xml
+    ├── mvnw
+    ├── mvnw.cmd
+    └── src/
+        ├── main/
+        │   ├── java/
+        │   │   └── com/onlyweather/api/
+        │   │       ├── client/
+        │   │       ├── config/
+        │   │       ├── controller/
+        │   │       ├── dto/
+        │   │       ├── exception/
+        │   │       └── service/
+        │   └── resources/
+        │       └── application.properties
+        │
+        └── test/
+            └── java/
 ```
 
 > Observação: o repositório também possui uma árvore Angular na raiz (`src/`, `package.json`, `angular.json`). O app principal usado no fluxo full-stack atual fica em `onlyweather-frontend/`.
