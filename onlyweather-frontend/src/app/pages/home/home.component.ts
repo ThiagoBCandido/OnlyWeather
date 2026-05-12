@@ -18,7 +18,6 @@ interface WeatherTheme {
   label: string;
   condition: string;
   icon: string;
-  temperature: string;
   background: string;
   card: string;
   darkBackground: string;
@@ -56,7 +55,6 @@ export class HomeComponent implements OnInit {
       label: 'Sunny',
       condition: 'Sunny',
       icon: 'assets/weather-icons/sunny.svg',
-      temperature: '32°C',
       background: 'from-yellow-200 via-orange-200 to-sky-300',
       card: 'from-yellow-400/90 to-orange-500/90',
       darkBackground: 'from-yellow-950 via-orange-950 to-slate-950',
@@ -67,7 +65,6 @@ export class HomeComponent implements OnInit {
       label: 'Partly cloudy',
       condition: 'Partly cloudy',
       icon: 'assets/weather-icons/partly-cloudy.svg',
-      temperature: '29°C',
       background: 'from-sky-200 via-blue-200 to-indigo-300',
       card: 'from-sky-400/90 to-indigo-500/90',
       darkBackground: 'from-sky-950 via-blue-950 to-indigo-950',
@@ -78,7 +75,6 @@ export class HomeComponent implements OnInit {
       label: 'Cloudy',
       condition: 'Cloudy',
       icon: 'assets/weather-icons/cloudy.svg',
-      temperature: '24°C',
       background: 'from-slate-300 via-slate-400 to-slate-500',
       card: 'from-slate-500/90 to-slate-700/90',
       darkBackground: 'from-slate-800 via-slate-900 to-black',
@@ -89,7 +85,6 @@ export class HomeComponent implements OnInit {
       label: 'Rainy',
       condition: 'Rainy',
       icon: 'assets/weather-icons/rainy.svg',
-      temperature: '22°C',
       background: 'from-blue-300 via-slate-500 to-slate-700',
       card: 'from-blue-600/90 to-slate-800/90',
       darkBackground: 'from-blue-950 via-slate-950 to-black',
@@ -100,7 +95,6 @@ export class HomeComponent implements OnInit {
       label: 'Heavy rain',
       condition: 'Heavy rain',
       icon: 'assets/weather-icons/heavy-rain.svg',
-      temperature: '20°C',
       background: 'from-slate-700 via-gray-900 to-black',
       card: 'from-gray-800/95 to-black/95',
       darkBackground: 'from-purple-950 via-slate-950 to-black',
@@ -111,7 +105,6 @@ export class HomeComponent implements OnInit {
       label: 'Night',
       condition: 'Night',
       icon: 'assets/weather-icons/night.svg',
-      temperature: '18°C',
       background: 'from-slate-900 via-indigo-950 to-black',
       card: 'from-slate-800/90 via-indigo-900/90 to-black/95',
       darkBackground: 'from-slate-950 via-indigo-950 to-black',
@@ -122,7 +115,6 @@ export class HomeComponent implements OnInit {
       label: 'Rainy night',
       condition: 'Rainy night',
       icon: 'assets/weather-icons/rainy-night.svg',
-      temperature: '17°C',
       background: 'from-slate-900 via-blue-950 to-black',
       card: 'from-blue-900/85 via-slate-900/90 to-black',
       darkBackground: 'from-blue-950 via-slate-950 to-black',
@@ -133,7 +125,6 @@ export class HomeComponent implements OnInit {
       label: 'Stormy night',
       condition: 'Stormy night',
       icon: 'assets/weather-icons/stormy-night.svg',
-      temperature: '16°C',
       background: 'from-purple-950 via-slate-950 to-black',
       card: 'from-purple-900/80 via-slate-900/90 to-black',
       darkBackground: 'from-purple-950 via-black to-slate-950',
@@ -169,14 +160,50 @@ export class HomeComponent implements OnInit {
 
   get appContainerTheme(): string {
     return this.isDarkMode
-      ? 'bg-black/30 border-white/10'
-      : 'bg-white/15 border-white/20';
+      ? 'bg-black/30 border-white/10 text-white'
+      : 'bg-white/45 border-white/50 text-slate-950';
   }
 
   get weatherCardTheme(): string {
     return this.isDarkMode
       ? this.currentTheme.darkCard
       : this.currentTheme.card;
+  }
+
+  get weatherCardTextTheme(): string {
+    if (this.isDarkMode || !this.isBrightWeatherCard) {
+      return 'text-white';
+    }
+
+    return 'text-slate-950';
+  }
+
+  get mutedWeatherTextTheme(): string {
+    if (this.isDarkMode || !this.isBrightWeatherCard) {
+      return 'text-white/70';
+    }
+
+    return 'text-slate-800/80';
+  }
+
+  get subtleWeatherTextTheme(): string {
+    if (this.isDarkMode || !this.isBrightWeatherCard) {
+      return 'text-white/60';
+    }
+
+    return 'text-slate-700/75';
+  }
+
+  get translucentPanelTheme(): string {
+    return this.isDarkMode
+      ? 'bg-white/15 text-white'
+      : 'bg-white/55 text-slate-950 ring-1 ring-white/50';
+  }
+
+  get translucentChipTheme(): string {
+    return this.isDarkMode
+      ? 'bg-white/20 text-white hover:bg-white/30'
+      : 'bg-white/70 text-slate-950 shadow-sm ring-1 ring-white/50 hover:bg-white/90';
   }
 
   get cityTitle(): string {
@@ -220,6 +247,13 @@ export class HomeComponent implements OnInit {
     return this.isCurrentCityFavorite
       ? 'Remove from favorites'
       : 'Add to favorites';
+  }
+
+  private get isBrightWeatherCard(): boolean {
+    return (
+      this.selectedWeather === 'sunny' ||
+      this.selectedWeather === 'partly-cloudy'
+    );
   }
 
   getWeatherIcon(weatherType: WeatherType): string {

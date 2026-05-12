@@ -13,7 +13,6 @@ interface WeatherTheme {
   label: string;
   condition: string;
   icon: string;
-  temperature: string;
   background: string;
   card: string;
   darkBackground: string;
@@ -49,7 +48,6 @@ export class HomeComponent implements OnInit {
       label: 'Ensolarado',
       condition: 'Sunny',
       icon: 'assets/weather-icons/sunny.svg',
-      temperature: '32°C',
       background: 'from-yellow-200 via-orange-200 to-sky-300',
       card: 'from-yellow-400/90 to-orange-500/90',
       darkBackground: 'from-yellow-950 via-orange-950 to-slate-950',
@@ -60,7 +58,6 @@ export class HomeComponent implements OnInit {
       label: 'Parcialmente nublado',
       condition: 'Partly cloudy',
       icon: 'assets/weather-icons/partly-cloudy.svg',
-      temperature: '29°C',
       background: 'from-sky-200 via-blue-200 to-indigo-300',
       card: 'from-sky-400/90 to-indigo-500/90',
       darkBackground: 'from-sky-950 via-blue-950 to-indigo-950',
@@ -71,7 +68,6 @@ export class HomeComponent implements OnInit {
       label: 'Nublado',
       condition: 'Cloudy',
       icon: 'assets/weather-icons/cloudy.svg',
-      temperature: '24°C',
       background: 'from-slate-300 via-slate-400 to-slate-500',
       card: 'from-slate-500/90 to-slate-700/90',
       darkBackground: 'from-slate-800 via-slate-900 to-black',
@@ -82,7 +78,6 @@ export class HomeComponent implements OnInit {
       label: 'Chuvoso',
       condition: 'Rainy',
       icon: 'assets/weather-icons/rainy.svg',
-      temperature: '22°C',
       background: 'from-blue-300 via-slate-500 to-slate-700',
       card: 'from-blue-600/90 to-slate-800/90',
       darkBackground: 'from-blue-950 via-slate-950 to-black',
@@ -93,7 +88,6 @@ export class HomeComponent implements OnInit {
       label: 'Chuva intensa',
       condition: 'Heavy rain',
       icon: 'assets/weather-icons/heavy-rain.svg',
-      temperature: '20°C',
       background: 'from-slate-700 via-gray-900 to-black',
       card: 'from-gray-800/95 to-black/95',
       darkBackground: 'from-purple-950 via-slate-950 to-black',

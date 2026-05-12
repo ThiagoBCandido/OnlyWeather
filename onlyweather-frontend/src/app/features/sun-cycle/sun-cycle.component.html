@@ -1,0 +1,43 @@
+<section class="sun-cycle-card">
+  <header class="sun-cycle-header">
+    <span class="sun-cycle-icon">
+      <span></span>
+    </span>
+
+    <strong>Sunset</strong>
+  </header>
+
+  <div class="sun-cycle-content">
+    <h2>{{ mainTime }}</h2>
+
+    <p>{{ daylightMessage }}</p>
+  </div>
+
+  <div class="sun-curve">
+    <svg viewBox="0 0 100 78" preserveAspectRatio="none" aria-hidden="true">
+      <path
+        class="sun-curve-shadow"
+        d="M 0 62 C 24 62, 28 28, 50 28 C 72 28, 76 62, 100 62"
+      />
+
+      <path
+        class="sun-curve-line"
+        d="M 0 62 C 24 62, 28 28, 50 28 C 72 28, 76 62, 100 62"
+      />
+
+      <line x1="0" y1="62" x2="100" y2="62" class="sun-horizon" />
+
+      <circle
+        class="sun-dot"
+        [attr.cx]="sunX"
+        [attr.cy]="sunY"
+        r="5"
+      />
+    </svg>
+  </div>
+
+  <footer class="sun-cycle-footer">
+    <span>Sunrise:</span>
+    <strong>{{ sunriseTime }}</strong>
+  </footer>
+</section>
