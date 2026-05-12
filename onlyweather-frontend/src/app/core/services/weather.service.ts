@@ -9,7 +9,10 @@ export type WeatherType =
   | 'partly-cloudy'
   | 'cloudy'
   | 'rainy'
-  | 'heavy-rain';
+  | 'heavy-rain'
+  | 'night'
+  | 'rainy-night'
+  | 'stormy-night';
 
 export interface ForecastDay {
   day: string;
@@ -44,12 +47,17 @@ export interface WeatherData {
 })
 export class WeatherService {
   private readonly apiUrl = `${environment.apiUrl}/weather`;
+
   constructor(private http: HttpClient) {}
+
   getWeatherByCity(city: string): Observable<WeatherData> {
     const params = new HttpParams().set('city', city);
 
-    return this.http.get<WeatherData>(this.apiUrl, { params }).pipe(catchError((error) => {
-        const message = error?.error?.message || 'Não foi possível buscar o clima agora.';
+    return this.http.get<WeatherData>(this.apiUrl, { params }).pipe(
+      catchError((error) => {
+        const message =
+          error?.error?.message || 'Unable to fetch weather right now.';
+
         return throwError(() => new Error(message));
       })
     );

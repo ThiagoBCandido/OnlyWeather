@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import {
   WeatherMapComponent,
   WeatherMapLocation
 } from '../../features/weather-map/weather-map.component';
-import { ForecastDay, WeatherData, WeatherService, WeatherType } from '../../core/services/weather.service';
+
+import {
+  ForecastDay,
+  WeatherData,
+  WeatherService,
+  WeatherType
+} from '../../core/services/weather.service';
 
 interface WeatherTheme {
   label: string;
@@ -38,6 +45,7 @@ export class HomeComponent implements OnInit {
   errorMessage = '';
 
   private readonly favoritesStorageKey = 'onlyweather-favorite-cities';
+  private readonly iconVersion = 'v=3';
 
   favoriteCities: string[] = this.loadFavoriteCities();
 
@@ -45,7 +53,7 @@ export class HomeComponent implements OnInit {
 
   themes: Record<WeatherType, WeatherTheme> = {
     sunny: {
-      label: 'Ensolarado',
+      label: 'Sunny',
       condition: 'Sunny',
       icon: 'assets/weather-icons/sunny.svg',
       temperature: '32°C',
@@ -56,7 +64,7 @@ export class HomeComponent implements OnInit {
     },
 
     'partly-cloudy': {
-      label: 'Parcialmente nublado',
+      label: 'Partly cloudy',
       condition: 'Partly cloudy',
       icon: 'assets/weather-icons/partly-cloudy.svg',
       temperature: '29°C',
@@ -67,9 +75,9 @@ export class HomeComponent implements OnInit {
     },
 
     cloudy: {
-      label: 'Nublado',
+      label: 'Cloudy',
       condition: 'Cloudy',
-      icon: 'assets/weather-icons/cloudyp.svg',
+      icon: 'assets/weather-icons/cloudy.svg',
       temperature: '24°C',
       background: 'from-slate-300 via-slate-400 to-slate-500',
       card: 'from-slate-500/90 to-slate-700/90',
@@ -78,7 +86,7 @@ export class HomeComponent implements OnInit {
     },
 
     rainy: {
-      label: 'Chuvoso',
+      label: 'Rainy',
       condition: 'Rainy',
       icon: 'assets/weather-icons/rainy.svg',
       temperature: '22°C',
@@ -89,7 +97,7 @@ export class HomeComponent implements OnInit {
     },
 
     'heavy-rain': {
-      label: 'Chuva intensa',
+      label: 'Heavy rain',
       condition: 'Heavy rain',
       icon: 'assets/weather-icons/heavy-rain.svg',
       temperature: '20°C',
@@ -97,6 +105,39 @@ export class HomeComponent implements OnInit {
       card: 'from-gray-800/95 to-black/95',
       darkBackground: 'from-purple-950 via-slate-950 to-black',
       darkCard: 'from-purple-900/70 via-slate-900/90 to-black'
+    },
+
+    night: {
+      label: 'Night',
+      condition: 'Night',
+      icon: 'assets/weather-icons/night.svg',
+      temperature: '18°C',
+      background: 'from-slate-900 via-indigo-950 to-black',
+      card: 'from-slate-800/90 via-indigo-900/90 to-black/95',
+      darkBackground: 'from-slate-950 via-indigo-950 to-black',
+      darkCard: 'from-slate-900/85 via-indigo-950/90 to-black'
+    },
+
+    'rainy-night': {
+      label: 'Rainy night',
+      condition: 'Rainy night',
+      icon: 'assets/weather-icons/rainy-night.svg',
+      temperature: '17°C',
+      background: 'from-slate-900 via-blue-950 to-black',
+      card: 'from-blue-900/85 via-slate-900/90 to-black',
+      darkBackground: 'from-blue-950 via-slate-950 to-black',
+      darkCard: 'from-blue-950/80 via-slate-950/90 to-black'
+    },
+
+    'stormy-night': {
+      label: 'Stormy night',
+      condition: 'Stormy night',
+      icon: 'assets/weather-icons/stormy-night.svg',
+      temperature: '16°C',
+      background: 'from-purple-950 via-slate-950 to-black',
+      card: 'from-purple-900/80 via-slate-900/90 to-black',
+      darkBackground: 'from-purple-950 via-black to-slate-950',
+      darkCard: 'from-purple-950/85 via-black/95 to-slate-950'
     }
   };
 
@@ -181,6 +222,12 @@ export class HomeComponent implements OnInit {
       : 'Add to favorites';
   }
 
+  getWeatherIcon(weatherType: WeatherType): string {
+    const icon = this.themes[weatherType]?.icon || this.themes.cloudy.icon;
+
+    return `${icon}?${this.iconVersion}`;
+  }
+
   searchWeather(): void {
     const city = this.searchTerm.trim();
 
@@ -256,14 +303,7 @@ export class HomeComponent implements OnInit {
 
   private isValidCoordinates(lat: unknown, lon: unknown): lat is number {
     return (
-      typeof lat === 'number' &&
-      typeof lon === 'number' &&
-      Number.isFinite(lat) &&
-      Number.isFinite(lon) &&
-      lat >= -90 &&
-      lat <= 90 &&
-      lon >= -180 &&
-      lon <= 180
+      typeof lat === 'number' && typeof lon === 'number' && Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180
     );
   }
 

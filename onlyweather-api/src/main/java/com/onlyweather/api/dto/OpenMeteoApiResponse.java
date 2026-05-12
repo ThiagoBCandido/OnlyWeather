@@ -5,7 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record OpenMeteoApiResponse(CurrentWeather current, DailyWeather daily) {
+public record OpenMeteoApiResponse(
+        CurrentWeather current,
+        DailyWeather daily
+) {
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record CurrentWeather(
             String time,
@@ -18,7 +22,9 @@ public record OpenMeteoApiResponse(CurrentWeather current, DailyWeather daily) {
             @JsonProperty("weather_code")
             int weatherCode,
             @JsonProperty("wind_speed_10m")
-            double windSpeed
+            double windSpeed,
+            @JsonProperty("is_day")
+            int isDay
     ) {
     }
 

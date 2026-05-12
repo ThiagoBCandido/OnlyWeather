@@ -36,7 +36,9 @@ public class WeatherService {
         }
 
         int currentCode = apiResponse.current().weatherCode();
-        String weatherType = getWeatherType(currentCode);
+        boolean isDay = apiResponse.current().isDay() == 1;
+
+        String weatherType = getCurrentWeatherType(currentCode, isDay);
 
         return new WeatherResponse(
                 location.name(),
@@ -48,7 +50,7 @@ public class WeatherService {
                 round(apiResponse.current().apparentTemperature()),
                 apiResponse.current().humidity(),
                 round(apiResponse.current().windSpeed()),
-                getCondition(currentCode),
+                getCondition(currentCode, isDay),
                 weatherType,
                 getIcon(weatherType),
                 apiResponse.current().time(),
@@ -58,12 +60,11 @@ public class WeatherService {
 
     private List<ForecastDayResponse> mapForecast(OpenMeteoApiResponse apiResponse) {
         List<ForecastDayResponse> forecast = new ArrayList<>();
-
         List<String> dates = apiResponse.daily().time();
 
         for (int index = 0; index < dates.size(); index++) {
             int weatherCode = apiResponse.daily().weatherCode().get(index);
-            String weatherType = getWeatherType(weatherCode);
+            String weatherType = getDayWeatherType(weatherCode);
             String date = dates.get(index);
 
             forecast.add(
@@ -73,8 +74,7 @@ public class WeatherService {
                             round(apiResponse.daily().minTemperature().get(index)),
                             round(apiResponse.daily().maxTemperature().get(index)),
                             getSafeRainChance(apiResponse, index),
-                            getCondition(weatherCode),
-                            weatherType,
+                            getCondition(weatherCode, true), weatherType, 
                             getIcon(weatherType)
                     )
             );
@@ -96,12 +96,26 @@ public class WeatherService {
     private String formatDay(String date) {
         LocalDate localDate = LocalDate.parse(date);
 
-        return localDate
-                .getDayOfWeek()
-                .getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        return localDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
     }
 
-    private String getWeatherType(int code) {
+    private String getCurrentWeatherType(int code, boolean isDay) {
+        if (isDay) {
+            return getDayWeatherType(code);
+        }
+
+        if (isStorm(code)) {
+            return "stormy-night";
+        }
+
+        if (isRain(code)) {
+            return "rainy-night";
+        }
+
+        return "night";
+    }
+
+    private String getDayWeatherType(int code) {
         if (code == 0 || code == 1) {
             return "sunny";
         }
@@ -110,12 +124,27 @@ public class WeatherService {
             return "partly-cloudy";
         }
 
-        if (code == 3 || code == 45 || code == 48) {
+        if (isCloudy(code)) {
             return "cloudy";
         }
 
-        if (
-                code == 51 ||
+        if (isRain(code)) {
+            return "rainy";
+        }
+
+        if (isStorm(code)) {
+            return "heavy-rain";
+        }
+
+        return "cloudy";
+    }
+
+    private boolean isCloudy(int code) {
+        return code == 3 || code == 45 || code == 48;
+    }
+
+    private boolean isRain(int code) {
+        return code == 51 ||
                 code == 53 ||
                 code == 55 ||
                 code == 56 ||
@@ -126,19 +155,29 @@ public class WeatherService {
                 code == 66 ||
                 code == 67 ||
                 code == 80 ||
-                code == 81
-        ) {
-            return "rainy";
-        }
-
-        if (code == 82 || code == 95 || code == 96 || code == 99) {
-            return "heavy-rain";
-        }
-
-        return "cloudy";
+                code == 81;
     }
 
-    private String getCondition(int code) {
+    private boolean isStorm(int code) {
+        return code == 82 ||
+                code == 95 ||
+                code == 96 ||
+                code == 99;
+    }
+
+    private String getCondition(int code, boolean isDay) {
+        if (!isDay) {
+            if (isStorm(code)) {
+                return "Stormy night";
+            }
+
+            if (isRain(code)) {
+                return "Rainy night";
+            }
+
+            return "Night";
+        }
+
         return switch (code) {
             case 0 -> "Sunny";
             case 1 -> "Mostly sunny";
@@ -170,10 +209,6 @@ public class WeatherService {
     }
 
     private String getIcon(String weatherType) {
-        if ("cloudy".equals(weatherType)) {
-            return "assets/weather-icons/cloudyp.svg";
-        }
-
         return "assets/weather-icons/" + weatherType + ".svg";
     }
 
