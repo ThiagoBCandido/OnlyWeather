@@ -1,18 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import {
-  WeatherMapComponent,
-  WeatherMapLocation
-} from '../../features/weather-map/weather-map.component';
-
-import {
-  ForecastDay,
-  WeatherData,
-  WeatherService,
-  WeatherType
-} from '../../core/services/weather.service';
+import { WeatherMapComponent, WeatherMapLocation } from '../../features/weather-map/weather-map.component';
+import { ForecastDay, WeatherData, WeatherService, WeatherType } from '../../core/services/weather.service';
 
 interface WeatherTheme {
   label: string;
@@ -244,21 +234,17 @@ export class HomeComponent implements OnInit {
   }
 
   get favoriteButtonLabel(): string {
-    return this.isCurrentCityFavorite
-      ? 'Remove from favorites'
-      : 'Add to favorites';
+    return this.isCurrentCityFavorite ? 'Remove from favorites' : 'Add to favorites';
   }
 
   private get isBrightWeatherCard(): boolean {
     return (
-      this.selectedWeather === 'sunny' ||
-      this.selectedWeather === 'partly-cloudy'
+      this.selectedWeather === 'sunny' || this.selectedWeather === 'partly-cloudy'
     );
   }
 
   getWeatherIcon(weatherType: WeatherType): string {
     const icon = this.themes[weatherType]?.icon || this.themes.cloudy.icon;
-
     return `${icon}?${this.iconVersion}`;
   }
 
@@ -301,9 +287,7 @@ export class HomeComponent implements OnInit {
     const cityName = this.weatherData.cityName;
 
     if (this.isCurrentCityFavorite) {
-      this.favoriteCities = this.favoriteCities.filter(
-        (city) => this.normalizeCity(city) !== this.normalizeCity(cityName)
-      );
+      this.favoriteCities = this.favoriteCities.filter((city) => this.normalizeCity(city) !== this.normalizeCity(cityName));
     } else {
       this.favoriteCities = [...this.favoriteCities, cityName];
     }
@@ -314,10 +298,7 @@ export class HomeComponent implements OnInit {
   toggleTheme(): void {
     this.isDarkMode = !this.isDarkMode;
 
-    localStorage.setItem(
-      'onlyweather-theme',
-      this.isDarkMode ? 'dark' : 'light'
-    );
+    localStorage.setItem('onlyweather-theme', this.isDarkMode ? 'dark' : 'light');
   }
 
   private getWeatherLocation(weather: WeatherData): WeatherMapLocation | null {
@@ -336,9 +317,7 @@ export class HomeComponent implements OnInit {
   }
 
   private isValidCoordinates(lat: unknown, lon: unknown): lat is number {
-    return (
-      typeof lat === 'number' && typeof lon === 'number' && Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180
-    );
+    return (typeof lat === 'number' && typeof lon === 'number' && Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180);
   }
 
   private loadFavoriteCities(): string[] {
