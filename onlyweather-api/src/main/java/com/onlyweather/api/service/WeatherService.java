@@ -42,6 +42,8 @@ public class WeatherService {
                 location.name(),
                 location.country(),
                 location.countryCode(),
+                location.latitude(),
+                location.longitude(),
                 round(apiResponse.current().temperature()),
                 round(apiResponse.current().apparentTemperature()),
                 apiResponse.current().humidity(),
@@ -168,6 +170,10 @@ public class WeatherService {
     }
 
     private String getIcon(String weatherType) {
+        if ("cloudy".equals(weatherType)) {
+            return "assets/weather-icons/cloudyp.svg";
+        }
+
         return "assets/weather-icons/" + weatherType + ".svg";
     }
 

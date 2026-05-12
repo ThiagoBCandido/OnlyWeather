@@ -112,7 +112,10 @@
     </section>
 
     <section class="mt-6">
-      <app-weather-map [location]="selectedLocation"></app-weather-map>
+      <app-weather-map
+        [location]="selectedLocation"
+        [isDarkMode]="isDarkMode"
+      ></app-weather-map>
     </section>
 
     <section class="mt-6">

@@ -1,10 +1,17 @@
 .weather-map-card {
-  --text-primary: #ffffff;
-  --text-muted: rgba(255, 255, 255, 0.66);
-  --surface: rgba(255, 255, 255, 0.15);
-  --surface-light: rgba(255, 255, 255, 0.14);
+  --text-primary: #102033;
+  --text-muted: rgba(15, 23, 42, 0.62);
+  --surface: rgba(255, 255, 255, 0.62);
+  --surface-light: rgba(255, 255, 255, 0.72);
+  --expanded-surface: rgba(242, 247, 252, 0.96);
+  --map-bg: #cfdde8;
+  --detail-surface: rgba(15, 23, 42, 0.08);
+  --status-text: rgba(15, 23, 42, 0.82);
   --danger-bg: rgba(255, 70, 70, 0.16);
-  --danger-text: #ffd6d6;
+  --danger-text: #9f1d1d;
+  --hud-bg: rgba(255, 255, 255, 0.76);
+  --hud-border: rgba(15, 23, 42, 0.12);
+  --blue: #1677ff;
 
   width: 100%;
   padding: 16px;
@@ -14,8 +21,22 @@
   backdrop-filter: blur(16px);
   overflow: hidden;
   cursor: zoom-in;
-  transition: inset 0.25s ease, border-radius 0.25s ease, padding 0.25s ease,
-    background 0.25s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.weather-map-card.dark-mode {
+  --text-primary: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.66);
+  --surface: rgba(255, 255, 255, 0.15);
+  --surface-light: rgba(255, 255, 255, 0.14);
+  --expanded-surface: rgba(8, 13, 26, 0.96);
+  --map-bg: #2f3842;
+  --detail-surface: rgba(255, 255, 255, 0.1);
+  --status-text: rgba(255, 255, 255, 0.88);
+  --danger-text: #ffd6d6;
+  --hud-bg: rgba(10, 17, 31, 0.76);
+  --hud-border: rgba(255, 255, 255, 0.12);
+  --blue: #63a7ff;
 }
 
 .weather-map-card.expanded {
@@ -26,7 +47,7 @@
   flex-direction: column;
   padding: 18px;
   border-radius: 0;
-  background: rgba(8, 13, 26, 0.96);
+  background: var(--expanded-surface);
   cursor: default;
 }
 
@@ -71,7 +92,7 @@
   font-size: 0.68rem;
   font-weight: 700;
   white-space: nowrap;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--status-text);
   background: var(--surface-light);
 }
 
@@ -86,8 +107,8 @@
   height: 34px;
   border: 0;
   border-radius: 50%;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.16);
+  color: var(--text-primary);
+  background: var(--surface-light);
   font-size: 1rem;
   font-weight: 800;
   line-height: 1;
@@ -99,19 +120,59 @@
   place-items: center;
 }
 
+.weather-map-stage {
+  position: relative;
+}
+
 .weather-map {
   width: 100%;
   height: 280px;
   border-radius: 20px;
   overflow: hidden;
-  background: #2f3842;
+  background: var(--map-bg);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+}
+
+.weather-map-card.expanded .weather-map-stage {
+  flex: 1;
+  min-height: 0;
 }
 
 .weather-map-card.expanded .weather-map {
-  flex: 1;
-  min-height: 0;
-  height: auto;
-  border-radius: 18px;
+  height: 100%;
+}
+
+.precipitation-hud {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 500;
+  min-width: 92px;
+  padding: 9px 11px;
+  border: 1px solid var(--hud-border);
+  border-radius: 15px;
+  color: var(--text-primary);
+  background: var(--hud-bg);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.precipitation-hud span,
+.precipitation-hud strong {
+  display: block;
+}
+
+.precipitation-hud span {
+  margin-bottom: 3px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.precipitation-hud strong {
+  font-size: 0.95rem;
 }
 
 .weather-map-details {
@@ -130,15 +191,11 @@
   min-width: 0;
   padding: 12px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.weather-map-details span,
-.weather-map-details strong {
-  display: block;
+  background: var(--detail-surface);
 }
 
 .weather-map-details span {
+  display: block;
   margin-bottom: 5px;
   font-size: 0.68rem;
   font-weight: 700;
@@ -147,6 +204,7 @@
 }
 
 .weather-map-details strong {
+  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -163,19 +221,15 @@
 
 .weather-map-legend div {
   flex: 1;
-  height: 7px;
+  height: 9px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #1e90ff, #8b3dff, #ffcf33);
+  background: linear-gradient(90deg, #4ab3ff, #1e72ff 35%, #7d43ff 65%, #ffcf33);
+  box-shadow: 0 0 20px rgba(74, 179, 255, 0.28);
 }
 
 :host ::ng-deep .location-marker {
   background: transparent;
   border: none;
-}
-
-:host ::ng-deep .location-marker-content,
-:host ::ng-deep .location-marker-pulse {
-  border-radius: 50%;
 }
 
 :host ::ng-deep .location-marker-content {
@@ -186,22 +240,26 @@
   display: grid;
   place-items: center;
   cursor: pointer;
-  background: rgba(28, 38, 50, 0.96);
-  border: 2px solid rgba(255, 255, 255, 0.9);
+  background: rgba(245, 248, 252, 0.96);
+  border: 2px solid rgba(15, 23, 42, 0.6);
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.38);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-:host ::ng-deep .location-marker-content:hover {
-  transform: scale(1.08);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.48);
+  border-radius: 50%;
 }
 
 :host ::ng-deep .location-marker-content svg {
   width: 24px;
   height: 24px;
-  fill: #ffffff;
+  fill: #102033;
   transform: rotate(45deg);
+}
+
+:host ::ng-deep .dark-mode .location-marker-content {
+  background: rgba(28, 38, 50, 0.96);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+:host ::ng-deep .dark-mode .location-marker-content svg {
+  fill: #ffffff;
 }
 
 :host ::ng-deep .location-marker-pulse {
@@ -210,6 +268,7 @@
   z-index: 1;
   background: rgba(127, 183, 255, 0.32);
   animation: locationPulse 1.8s ease-out infinite;
+  border-radius: 50%;
 }
 
 @keyframes locationPulse {
@@ -241,11 +300,6 @@
 
   .weather-map-card.expanded {
     padding: 12px;
-  }
-
-  .weather-map-card.expanded .weather-map-header {
-    flex-direction: row;
-    align-items: center;
   }
 
   .weather-map-details {

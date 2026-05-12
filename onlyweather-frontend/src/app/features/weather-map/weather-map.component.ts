@@ -21,7 +21,14 @@ interface RainViewerResponse {
   host: string;
   radar?: {
     past?: Array<{ path: string; time: number }>;
+    nowcast?: Array<{ path: string; time: number }>;
   };
+}
+
+interface RadarFrame {
+  path: string;
+  time: number;
+  kind: 'past' | 'forecast';
 }
 
 const MAP_CONFIG = {
@@ -29,7 +36,12 @@ const MAP_CONFIG = {
   locationZoom: 8,
   radarRefreshMs: 10 * 60 * 1000,
   radarApiUrl: 'https://api.rainviewer.com/public/weather-maps.json',
-  baseMapUrl: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+  lightMapUrl: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  lightMapAttribution: '&copy; OpenStreetMap contributors',
+  darkMapUrl:
+    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  darkMapAttribution:
+    '&copy; OpenStreetMap contributors &copy; CARTO'
 };
 
 @Component({
@@ -40,6 +52,7 @@ const MAP_CONFIG = {
 })
 export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() location: WeatherMapLocation | null = null;
+  @Input() isDarkMode = false;
 
   @ViewChild('mapContainer', { static: true })
   private mapContainer!: ElementRef<HTMLDivElement>;
@@ -51,10 +64,13 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
   lastRadarUpdate = '';
 
   private map?: L.Map;
+  private baseLayer?: L.TileLayer;
   private radarLayer?: L.TileLayer;
   private locationMarker?: L.Marker;
   private radarTimer?: ReturnType<typeof setInterval>;
   private currentRadarPath?: string;
+  private radarHost = '';
+  private currentFrame?: RadarFrame;
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -67,11 +83,17 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.map || !changes['location'] || !this.location) {
+    if (!this.map) {
       return;
     }
 
-    this.setLocation(this.location);
+    if (changes['isDarkMode']) {
+      this.updateBaseLayer();
+    }
+
+    if (changes['location'] && this.location) {
+      this.setLocation(this.location);
+    }
   }
 
   ngOnDestroy(): void {
@@ -105,7 +127,7 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
   }
 
   get locationLabel(): string {
-    return this.location?.label || 'Current view';
+    return this.location?.label || 'Waiting for city';
   }
 
   get coordinatesLabel(): string {
@@ -116,16 +138,27 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
     return `${this.location.lat.toFixed(4)}, ${this.location.lon.toFixed(4)}`;
   }
 
+  get frameTimeLabel(): string {
+    if (!this.currentFrame) {
+      return '--:--';
+    }
+
+    return this.formatRadarTime(this.currentFrame.time);
+  }
+
+  get frameTypeLabel(): string {
+    return this.currentFrame?.kind === 'forecast'
+      ? 'Nowcast'
+      : 'Observed';
+  }
+
   private initMap(): void {
     this.map = L.map(this.mapContainer.nativeElement, {
       zoomControl: false,
       attributionControl: true
     });
 
-    L.tileLayer(MAP_CONFIG.baseMapUrl, {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
+    this.updateBaseLayer();
 
     L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
@@ -216,23 +249,27 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
       }
 
       const data: RainViewerResponse = await response.json();
-      const frames = data.radar?.past ?? [];
-      const latestFrame = frames[frames.length - 1];
+      const pastFrames = (data.radar?.past ?? []).map((frame) => ({
+        ...frame,
+        kind: 'past' as const
+      }));
+      const forecastFrames = (data.radar?.nowcast ?? []).map((frame) => ({
+        ...frame,
+        kind: 'forecast' as const
+      }));
+      const frames = [...pastFrames, ...forecastFrames];
+      const latestFrame = pastFrames[pastFrames.length - 1] ?? frames[frames.length - 1];
 
       if (!latestFrame) {
         throw new Error('No radar frames found');
       }
 
-      if (latestFrame.path !== this.currentRadarPath) {
-        this.currentRadarPath = latestFrame.path;
-
-        this.renderRadar(
-          `${data.host}${latestFrame.path}/256/{z}/{x}/{y}/2/1_1.png`
-        );
-      }
+      this.radarHost = data.host;
+      this.currentFrame = latestFrame;
+      this.renderCurrentRadarFrame();
 
       this.setRadarStatus('Radar updated');
-      this.setRadarDetails(frames.length, latestFrame.time);
+      this.setRadarDetails(frames.length, latestFrame.time, forecastFrames.length);
     } catch {
       this.setRadarStatus('Radar unavailable', true);
       this.radarDetails = 'Precipitation layer could not be loaded';
@@ -256,18 +293,64 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
     }).addTo(this.map);
   }
 
+  private renderCurrentRadarFrame(): void {
+    const frame = this.currentFrame;
+
+    if (!frame || !this.radarHost) {
+      return;
+    }
+
+    if (frame.path === this.currentRadarPath) {
+      return;
+    }
+
+    this.currentRadarPath = frame.path;
+    this.renderRadar(`${this.radarHost}${frame.path}/256/{z}/{x}/{y}/2/1_1.png`);
+  }
+
+  private updateBaseLayer(): void {
+    if (!this.map) {
+      return;
+    }
+
+    this.baseLayer?.remove();
+
+    this.baseLayer = L.tileLayer(
+      this.isDarkMode ? MAP_CONFIG.darkMapUrl : MAP_CONFIG.lightMapUrl,
+      {
+        maxZoom: 18,
+        attribution: this.isDarkMode
+          ? MAP_CONFIG.darkMapAttribution
+          : MAP_CONFIG.lightMapAttribution
+      }
+    ).addTo(this.map);
+
+    if (this.radarLayer) {
+      this.radarLayer.bringToFront();
+    }
+  }
+
   private setRadarStatus(message: string, error = false): void {
     this.radarStatus = message;
     this.radarUnavailable = error;
   }
 
-  private setRadarDetails(frameCount: number, latestFrameTime: number): void {
-    this.lastRadarUpdate = new Intl.DateTimeFormat('en-US', {
+  private setRadarDetails(
+    frameCount: number,
+    latestFrameTime: number,
+    forecastCount: number
+  ): void {
+    this.lastRadarUpdate = this.formatRadarTime(latestFrameTime);
+    this.radarDetails = forecastCount > 0
+      ? `${frameCount} radar frames, includes nowcast`
+      : `${frameCount} observed radar frames`;
+  }
+
+  private formatRadarTime(time: number): string {
+    return new Intl.DateTimeFormat('en-US', {
       hour: '2-digit',
       minute: '2-digit'
-    }).format(new Date(latestFrameTime * 1000));
-
-    this.radarDetails = `${frameCount} recent precipitation frames loaded`;
+    }).format(new Date(time * 1000));
   }
 
   private invalidateMapSoon(): void {

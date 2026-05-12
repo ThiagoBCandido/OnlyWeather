@@ -5,16 +5,10 @@
       <h2>Weather map</h2>
     </div>
 
-    <strong [class.error]="radarUnavailable">
-      {{ radarStatus }}
+    <strong [class.error]="mapUnavailable">
+      {{ mapStatus }}
     </strong>
   </header>
 
-  <div #mapContainer class="weather-map"></div>
-
-  <footer class="weather-map-legend">
-    <span>Light</span>
-    <div></div>
-    <span>Heavy</span>
-  </footer>
+  <div id="windy" #windyContainer class="windy-map"></div>
 </section>

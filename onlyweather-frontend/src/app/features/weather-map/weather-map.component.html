@@ -1,6 +1,7 @@
 <section
   class="weather-map-card"
   [class.expanded]="isExpanded"
+  [class.dark-mode]="isDarkMode"
   (click)="openExpanded()"
 >
   <header class="weather-map-header">
@@ -25,7 +26,14 @@
     </div>
   </header>
 
-  <div #mapContainer class="weather-map"></div>
+  <div class="weather-map-stage">
+    <div #mapContainer class="weather-map"></div>
+
+    <div class="precipitation-hud">
+      <span>{{ frameTypeLabel }}</span>
+      <strong>{{ frameTimeLabel }}</strong>
+    </div>
+  </div>
 
   <footer class="weather-map-details">
     <div>

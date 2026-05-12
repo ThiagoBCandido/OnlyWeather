@@ -18,18 +18,6 @@ interface WeatherTheme {
   darkCard: string;
 }
 
-type WeatherResponseWithCoordinates = WeatherData &
-  Partial<{
-    latitude: number;
-    longitude: number;
-    lat: number;
-    lon: number;
-    coord: {
-      lat?: number;
-      lon?: number;
-    };
-  }>;
-
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -81,7 +69,7 @@ export class HomeComponent implements OnInit {
     cloudy: {
       label: 'Nublado',
       condition: 'Cloudy',
-      icon: 'assets/weather-icons/cloudy.svg',
+      icon: 'assets/weather-icons/cloudyp.svg',
       temperature: '24°C',
       background: 'from-slate-300 via-slate-400 to-slate-500',
       card: 'from-slate-500/90 to-slate-700/90',
@@ -252,18 +240,16 @@ export class HomeComponent implements OnInit {
   }
 
   private getWeatherLocation(weather: WeatherData): WeatherMapLocation | null {
-    const data = weather as WeatherResponseWithCoordinates;
-
-    const lat = data.latitude ?? data.lat ?? data.coord?.lat;
-    const lon = data.longitude ?? data.lon ?? data.coord?.lon;
+    const lat = weather.latitude;
+    const lon = weather.longitude;
 
     if (!this.isValidCoordinates(lat, lon)) {
       return null;
     }
 
     return {
-      lat: lat as number,
-      lon: lon as number,
+      lat,
+      lon,
       label: `${weather.cityName}, ${weather.countryCode}`
     };
   }

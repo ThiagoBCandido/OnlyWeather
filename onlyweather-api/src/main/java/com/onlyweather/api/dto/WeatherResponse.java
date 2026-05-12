@@ -6,6 +6,8 @@ public record WeatherResponse(
     String cityName,
     String country,
     String countryCode,
+    double latitude,
+    double longitude,
     int temperature,
     int feelsLike,
     int humidity,

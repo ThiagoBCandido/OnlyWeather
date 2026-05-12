@@ -240,7 +240,7 @@ OnlyWeather/
 │           └── weather-icons/
 │               ├── sunny.svg
 │               ├── partly-cloudy.svg
-│               ├── cloudy.svg
+│               ├── cloudyp.svg
 │               ├── rainy.svg
 │               └── heavy-rain.svg
 │

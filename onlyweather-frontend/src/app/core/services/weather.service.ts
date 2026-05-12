@@ -26,6 +26,8 @@ export interface WeatherData {
   cityName: string;
   country: string;
   countryCode: string;
+  latitude: number;
+  longitude: number;
   temperature: number;
   feelsLike: number;
   humidity: number;
