@@ -1,54 +1,15 @@
-<<<<<<< HEAD
-=======
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
 # Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
-# System files
-.DS_Store
-Thumbs.db
-
->>>>>>> a02cf5f84b165376e6114fb761f4232d87bcc2cd
-# Node / Angular
-node_modules/
 dist/
+tmp/
+out-tsc/
+bazel-out/
+target/
+
+# Dependencies
+node_modules/
+
+# Angular cache
 .angular/
-coverage/
 
 # Logs
 npm-debug.log*
@@ -56,16 +17,30 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Environment
-.env
-.env.local
-.env.development
-.env.production
+# Coverage
+coverage/
 
-# IDEs
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+*.secret
+secrets/
+onlyweather-api/src/main/resources/application-local.properties
+onlyweather-api/src/main/resources/application-*.local.properties
+
+# IDEs and editors
 .vscode/
 .idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
 
-# OS
+# System files
 .DS_Store
 Thumbs.db

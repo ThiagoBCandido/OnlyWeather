@@ -38,7 +38,7 @@ declare global {
   }
 }
 
-const WINDY_API_KEY = 'lrJf1iUAJd5tiirJSL971T09sfKXjuJr';
+const WINDY_API_KEY_STORAGE_KEY = 'onlyweather-windy-api-key';
 
 const MAP_CONFIG = {
   initialLat: 0,
@@ -98,7 +98,7 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
 
       window.windyInit(
         {
-          key: WINDY_API_KEY,
+          key: this.getWindyApiKey(),
           lat: startLocation.lat,
           lon: startLocation.lon,
           zoom: MAP_CONFIG.initialZoom,
@@ -143,6 +143,16 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
       lon: MAP_CONFIG.initialLon,
       label: 'World view'
     };
+  }
+
+  private getWindyApiKey(): string {
+    const apiKey = localStorage.getItem(WINDY_API_KEY_STORAGE_KEY)?.trim();
+
+    if (!apiKey) {
+      throw new Error('Windy API key is not configured.');
+    }
+
+    return apiKey;
   }
 
   private configurePrecipitationLayer(): void {
