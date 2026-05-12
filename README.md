@@ -6,7 +6,7 @@ O app permite pesquisar uma cidade, consultar dados reais de clima, visualizar p
 
 ## Preview
 
-![Preview do OnlyWeather](docs/images/layout.png), ![Preview do OnlyWeather](docs/images/mapa.png)
+![Preview do OnlyWeather](docs/images/layout.png) ![Preview do OnlyWeather](docs/images/mapa.png)
 
 ## Funcionalidades
 
