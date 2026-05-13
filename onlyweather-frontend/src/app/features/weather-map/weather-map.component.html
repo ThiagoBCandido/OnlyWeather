@@ -1,62 +1,43 @@
-<section
-  class="weather-map-card"
-  [class.expanded]="isExpanded"
-  [class.dark-mode]="isDarkMode"
-  (click)="openExpanded()"
->
+<section class="weather-map-card" [class.expanded]="isExpanded" [class.dark-mode]="isDarkMode" (click)="openExpanded()">
   <header class="weather-map-header">
     <div>
       <span>Precipitation</span>
       <h2>Weather map</h2>
     </div>
-
     <div class="weather-map-actions">
       <strong [class.error]="radarUnavailable">
         {{ radarStatus }}
       </strong>
-
-      <button
-        type="button"
-        class="weather-map-close"
-        aria-label="Close expanded map"
-        (click)="closeExpanded($event)"
-      >
+      <button type="button" class="weather-map-close" aria-label="Close expanded map" (click)="closeExpanded($event)">
         x
       </button>
     </div>
   </header>
-
   <div class="weather-map-stage">
     <div #mapContainer class="weather-map"></div>
-
     <div class="precipitation-hud">
       <span>{{ frameTypeLabel }}</span>
       <strong>{{ frameTimeLabel }}</strong>
     </div>
   </div>
-
   <footer class="weather-map-details">
     <div>
       <span>Place</span>
       <strong>{{ locationLabel }}</strong>
     </div>
-
     <div>
       <span>Coordinates</span>
       <strong>{{ coordinatesLabel }}</strong>
     </div>
-
     <div>
       <span>Radar</span>
       <strong>{{ radarDetails }}</strong>
     </div>
-
     <div>
       <span>Updated</span>
       <strong>{{ lastRadarUpdate || '--:--' }}</strong>
     </div>
   </footer>
-
   <footer class="weather-map-legend">
     <span>Light</span>
     <div></div>
