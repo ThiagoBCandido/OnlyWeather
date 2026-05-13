@@ -31,7 +31,6 @@ src/
         weather.service.ts
     features/
       weather-map/
-      sun-cycle/
     pages/
       home/
   assets/
@@ -98,4 +97,3 @@ dist/onlyweather-frontend
 - O back-end precisa estar disponível no endereço configurado em `environment.apiUrl`.
 - O mapa usa tiles externos, então precisa de conexão com a internet para carregar mapa e radar.
 - Os favoritos e o tema ficam apenas no navegador do usuário.
-- O componente `sun-cycle` existe na estrutura, mas ainda deve ser integrado ao contrato principal da tela para ser exibido como feature final.

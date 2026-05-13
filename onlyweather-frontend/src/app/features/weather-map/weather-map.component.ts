@@ -20,9 +20,14 @@ export interface WeatherMapLocation {
 interface RainViewerResponse {
   host: string;
   radar?: {
-    past?: Array<{ path: string; time: number }>;
-    nowcast?: Array<{ path: string; time: number }>;
+    past?: RainViewerFrame[];
+    nowcast?: RainViewerFrame[];
   };
+}
+
+interface RainViewerFrame {
+  path: string;
+  time: number;
 }
 
 interface RadarFrame {
@@ -249,16 +254,8 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
       }
 
       const data: RainViewerResponse = await response.json();
-      const pastFrames = (data.radar?.past ?? []).map((frame) => ({
-        ...frame,
-        kind: 'past' as const
-      }));
-      const forecastFrames = (data.radar?.nowcast ?? []).map((frame) => ({
-        ...frame,
-        kind: 'forecast' as const
-      }));
-      const frames = [...pastFrames, ...forecastFrames];
-      const latestFrame = pastFrames[pastFrames.length - 1] ?? frames[frames.length - 1];
+      const frames = this.getRadarFrames(data);
+      const latestFrame = this.getLatestRadarFrame(frames);
 
       if (!latestFrame) {
         throw new Error('No radar frames found');
@@ -269,12 +266,33 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
       this.renderCurrentRadarFrame();
 
       this.setRadarStatus('Radar updated');
-      this.setRadarDetails(frames.length, latestFrame.time, forecastFrames.length);
+      this.setRadarDetails(frames, latestFrame.time);
     } catch {
       this.setRadarStatus('Radar unavailable', true);
       this.radarDetails = 'Precipitation layer could not be loaded';
       this.lastRadarUpdate = '';
     }
+  }
+
+  private getRadarFrames(data: RainViewerResponse): RadarFrame[] {
+    const pastFrames = this.toRadarFrames(data.radar?.past ?? [], 'past');
+    const forecastFrames = this.toRadarFrames(data.radar?.nowcast ?? [], 'forecast');
+
+    return [...pastFrames, ...forecastFrames];
+  }
+
+  private toRadarFrames(
+    frames: RainViewerFrame[],
+    kind: RadarFrame['kind']
+  ): RadarFrame[] {
+    return frames.map((frame) => ({ ...frame, kind }));
+  }
+
+  private getLatestRadarFrame(frames: RadarFrame[]): RadarFrame | undefined {
+    return (
+      [...frames].reverse().find((frame) => frame.kind === 'past') ??
+      frames[frames.length - 1]
+    );
   }
 
   private renderRadar(url: string): void {
@@ -335,15 +353,13 @@ export class WeatherMapComponent implements AfterViewInit, OnChanges, OnDestroy 
     this.radarUnavailable = error;
   }
 
-  private setRadarDetails(
-    frameCount: number,
-    latestFrameTime: number,
-    forecastCount: number
-  ): void {
+  private setRadarDetails(frames: RadarFrame[], latestFrameTime: number): void {
+    const forecastCount = frames.filter((frame) => frame.kind === 'forecast').length;
+
     this.lastRadarUpdate = this.formatRadarTime(latestFrameTime);
     this.radarDetails = forecastCount > 0
-      ? `${frameCount} radar frames, includes nowcast`
-      : `${frameCount} observed radar frames`;
+      ? `${frames.length} radar frames, includes nowcast`
+      : `${frames.length} observed radar frames`;
   }
 
   private formatRadarTime(time: number): string {

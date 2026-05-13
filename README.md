@@ -87,8 +87,7 @@ OnlyWeather/
 │       │   │       └── weather.service.ts
 │       │   │
 │       │   ├── features/
-│       │   │   ├── weather-map/
-│       │   │   └── sun-cycle/
+│       │   │   └── weather-map/
 │       │   │
 │       │   └── pages/
 │       │       └── home/
